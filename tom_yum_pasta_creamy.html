@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Сливочная паста Том-ям с креветками — Recipe Todo</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <style>
+    :root{
+      --bg:#111017;
+      --panel:#1c1a22;
+      --panel-2:#24212c;
+      --text:#fff4ed;
+      --muted:#c2b2ad;
+      --accent:#ff6f4f;
+      --accent-2:#ffb06f;
+      --accent-3:#ffd18b;
+      --accent-dark:#9e3429;
+      --ok:#73d6a0;
+      --warn:#ffd166;
+      --hot:#ff3f36;
+      --thai:#ff8a00;
+      --border:rgba(255,111,79,.23);
+      --soft-border:rgba(255,255,255,.075);
+      --shadow:0 18px 60px rgba(0,0,0,.42);
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% -8%, rgba(255,111,79,.24), transparent 32%),
+        radial-gradient(circle at 86% 2%, rgba(255,138,0,.17), transparent 34%),
+        radial-gradient(circle at 90% 62%, rgba(255,63,54,.10), transparent 34%),
+        linear-gradient(135deg, #0e0c12, var(--bg));
+      color:var(--text);
+    }
+    button,input{font:inherit}
+    button{-webkit-tap-highlight-color:transparent}
+    .app{
+      width:min(1180px,100%);
+      margin:0 auto;
+      padding:28px 18px 46px;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:18px;
+      align-items:stretch;
+      margin-bottom:18px;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018)), var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .hero-main{padding:28px;position:relative}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border:1px solid rgba(255,111,79,.40);
+      border-radius:999px;
+      color:var(--accent-3);
+      background:rgba(255,111,79,.095);
+      font-weight:800;
+      font-size:14px;
+    }
+    h1{
+      margin:16px 0 10px;
+      font-size:clamp(32px,5vw,60px);
+      line-height:.96;
+      letter-spacing:-.058em;
+    }
+    .subtitle{
+      font-size:18px;
+      color:var(--muted);
+      max-width:760px;
+      line-height:1.55;
+      margin:0;
+    }
+    .meta-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-top:22px;
+    }
+    .meta{
+      padding:14px 12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.065);
+      min-width:0;
+    }
+    .meta b{display:block;font-size:18px;color:var(--accent-3);white-space:nowrap}
+    .meta span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+    .hero-side{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      justify-content:center;
+    }
+    .plate{
+      min-height:190px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.07);
+      background:
+        radial-gradient(circle at 50% 46%, rgba(255,111,79,.24), transparent 51%),
+        radial-gradient(circle at 25% 24%, rgba(255,209,139,.13), transparent 34%),
+        linear-gradient(135deg, rgba(255,111,79,.13), rgba(255,255,255,.03));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .plate .big{font-size:92px;filter:drop-shadow(0 12px 20px rgba(0,0,0,.38))}
+    .plate .float{position:absolute;font-size:28px;opacity:.30;filter:blur(.1px)}
+    .f1{left:20px;top:18px}.f2{right:26px;top:28px}.f3{left:42px;bottom:22px}.f4{right:48px;bottom:20px}.f5{right:90px;top:88px;font-size:22px!important}
+    .progress-wrap{
+      padding:16px;
+      border-radius:20px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.065);
+    }
+    .progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:var(--muted);font-size:14px;gap:10px}
+    .progress-top b{color:var(--accent-3)}
+    .bar{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+    .fill{height:100%;background:linear-gradient(90deg,var(--hot),var(--thai),var(--accent-3));border-radius:999px;transition:width .25s ease}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:0;
+      cursor:pointer;
+      border-radius:16px;
+      padding:11px 14px;
+      color:var(--text);
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.09);
+      transition:.15s ease;
+      touch-action:manipulation;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.105)}
+    .btn.primary{background:linear-gradient(135deg,var(--accent-dark),var(--accent));border-color:rgba(255,255,255,.12);font-weight:900}
+    .layout{display:grid;grid-template-columns:.86fr 1.14fr;gap:18px}
+    .section{padding:22px}
+    .section h2{margin:0 0 14px;font-size:24px;letter-spacing:-.025em}
+    .section h3{margin:18px 0 10px;font-size:16px;color:var(--accent-3);text-transform:uppercase;letter-spacing:.08em}
+    .ingredients{display:grid;gap:9px}
+    .ing{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:11px 12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.058);
+    }
+    .ing .name{color:var(--text);line-height:1.35}
+    .ing .amount{color:var(--accent-3);font-weight:900;text-align:right;white-space:nowrap}
+    .note{
+      color:var(--muted);
+      line-height:1.5;
+      background:rgba(255,111,79,.085);
+      border:1px solid rgba(255,111,79,.17);
+      padding:13px 14px;
+      border-radius:18px;
+      margin-top:14px;
+    }
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+      position:sticky;
+      top:0;
+      z-index:2;
+      padding:2px 0 8px;
+      backdrop-filter:blur(10px);
+    }
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+      border:1px solid rgba(255,255,255,.080);
+      color:var(--muted);
+      cursor:pointer;
+      min-height:40px;
+    }
+    .tab.active{color:#281112;background:linear-gradient(135deg,var(--accent-3),var(--accent));font-weight:950}
+    .todo-list{display:grid;gap:12px}
+    .todo{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:13px;
+      align-items:start;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.065);
+      transition:.18s ease;
+      cursor:pointer;
+    }
+    .todo.done{opacity:.64;background:rgba(115,214,160,.045);border-color:rgba(115,214,160,.16)}
+    .check{
+      appearance:none;
+      width:28px;
+      height:28px;
+      border-radius:10px;
+      margin:0;
+      cursor:pointer;
+      border:2px solid rgba(255,111,79,.67);
+      background:rgba(0,0,0,.15);
+      position:relative;
+      flex:none;
+    }
+    .check:checked{background:linear-gradient(135deg,var(--accent),var(--accent-3));border-color:transparent}
+    .check:checked:after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#2b1110;font-weight:1000}
+    .todo-title{font-weight:950;font-size:17px;margin:0 0 5px;line-height:1.25}
+    .todo.done .todo-title{text-decoration:line-through}
+    .todo-desc{color:var(--muted);line-height:1.48;margin:0}
+    .time{color:var(--accent-3);font-size:13px;font-weight:950;padding:6px 9px;border-radius:999px;background:rgba(255,111,79,.095);white-space:nowrap}
+    .tips{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .tip{padding:15px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.058)}
+    .tip b{display:block;color:var(--accent-3);margin-bottom:6px}
+    .tip span{color:var(--muted);line-height:1.45;font-size:14px}
+    .macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .macro{padding:14px;border-radius:18px;background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.065)}
+    .macro b{display:block;color:var(--accent-3);font-size:20px;line-height:1.1}
+    .macro span{color:var(--muted);font-size:13px}
+    .variant{
+      margin-top:14px;
+      border-radius:20px;
+      background:linear-gradient(135deg, rgba(255,63,54,.10), rgba(255,138,0,.07));
+      border:1px solid rgba(255,138,0,.18);
+      padding:14px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .variant b{color:var(--accent-3)}
+
+    .recipe-switch{
+      margin-bottom:18px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .recipe-switch-copy b{display:block;font-size:16px;color:var(--accent-3);margin-bottom:3px}
+    .recipe-switch-copy span{color:var(--muted);font-size:13px;line-height:1.4}
+    .recipe-tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .recipe-tab{
+      padding:11px 14px;
+      min-height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.09);
+      color:var(--muted);
+      background:rgba(255,255,255,.055);
+      cursor:pointer;
+      font-weight:800;
+      touch-action:manipulation;
+    }
+    .recipe-tab.active{
+      color:#281112;
+      background:linear-gradient(135deg,var(--accent-3),var(--accent));
+      border-color:transparent;
+    }
+    .alt-note{
+      margin:0 0 14px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,209,139,.07);
+      border:1px solid rgba(255,209,139,.14);
+      color:var(--muted);
+      line-height:1.48;
+      font-size:14px;
+    }
+    .alt-note b{color:var(--accent-3)}
+    footer{margin-top:18px;text-align:center;color:rgba(255,255,255,.42);font-size:13px}
+
+    @media(max-width:900px){
+      .hero,.layout{grid-template-columns:1fr}
+      .meta-grid{grid-template-columns:repeat(2,1fr)}
+      .tips{grid-template-columns:1fr}
+      .macro-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:560px){
+      .app{padding:14px 10px 30px}
+      .hero{gap:12px;margin-bottom:12px}
+      .layout{gap:12px}
+      .hero-main,.hero-side,.section{padding:16px}
+      .card{border-radius:22px}
+      h1{font-size:clamp(34px,12vw,48px);letter-spacing:-.062em}
+      .subtitle{font-size:16px;line-height:1.5}
+      .meta-grid{grid-template-columns:1fr 1fr;gap:8px}
+      .meta{padding:12px 10px;border-radius:16px}
+      .meta b{font-size:16px}
+      .plate{min-height:150px;border-radius:20px}
+      .plate .big{font-size:74px}
+      .todo{grid-template-columns:auto 1fr;padding:14px;gap:11px}
+      .time{grid-column:2;justify-self:start;margin-top:2px}
+      .todo-title{font-size:16px}
+      .todo-desc{font-size:14px}
+      .tabs{overflow-x:auto;flex-wrap:nowrap;margin-left:-2px;margin-right:-2px;padding-bottom:10px;position:relative}
+      .tab{white-space:nowrap;flex:0 0 auto}
+      .ing{align-items:flex-start;flex-direction:column;gap:4px;padding:12px}
+      .ing .amount{text-align:left;white-space:normal}
+      .macro-grid{grid-template-columns:1fr}
+      .actions .btn{flex:1 1 auto}
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    const {useState, useEffect} = React;
+    const h = React.createElement;
+
+    const commonSauce = [
+      ["🥛 Сливки 33%", "150 мл"],
+      ["🌶️ Паста том-ям Aroy-D", "12 г на всю сковороду"],
+      ["💧 Вода от пасты", "40–70 мл по консистенции"],
+      ["🫒 Масло оливковое/растительное", "10 г · 2 ч. л."],
+      ["🧂 Соль", "аккуратно, по вкусу"],
+      ["⚫ Чёрный перец", "по вкусу"],
+      ["🧈 Сливочное масло", "5 г · опционально для café-версии"],
+    ];
+
+    const recipes = {
+      champignons: {
+        label:"🍄 С шампиньонами",
+        short:"Классическая версия",
+        ingredients:[
+          ["🍝 Fettuccine Reggia 614", "140 г сухой"],
+          ["🦐 Креветки Vici в панцире", "700–800 г замороженных"],
+          ["🦐 Очищенное мясо креветок", "цель: 300 г"],
+          ["🍄 Шампиньоны", "200 г"],
+          ["🍅 Томаты черри", "220–250 г"],
+          ["🧄 Чеснок", "2 зубчика · ~10 г"],
+          ["🌿 Петрушка", "10–15 г"],
+          ["🧀 Džiugas Delicate 24 мес.", "15–20 г"],
+        ],
+        note:"Шампиньоны сначала хорошо подрумяниваем отдельно: они дают более глубокий грибной вкус и красивый fond на сковороде.",
+        kcal:"750–800",
+        protein:"45–50 г",
+        totalKcal:"1500–1600",
+        totalProtein:"90–100 г",
+        steps:[
+          {group:"Подготовка",icon:"🦐",title:"Разморозь и очисти креветки",time:"15–25 мин",desc:"Возьми 700–800 г замороженных креветок Vici в панцире. Разморозь, очисти и взвесь мясо: для рецепта нужно около 300 г очищенных креветок. Очень хорошо обсуши бумажными полотенцами — это критично для нормальной обжарки."},
+          {group:"Подготовка",icon:"🍄",title:"Подготовь шампиньоны, черри, чеснок и сыр",time:"5 мин",desc:"Шампиньоны 200 г нарежь средними пластинками. Черри 220–250 г разрежь пополам. Чеснок раздели: 1 зубчик мелко нарежь для креветок, 1 зубчик — для соуса. Džiugas 15–20 г натри максимально мелко, петрушку 10–15 г поруби."},
+          {group:"Паста",icon:"🍝",title:"Отвари Fettuccine Reggia до al dente",time:"9–11 мин",desc:"Отвари 140 г сухих Fettuccine Reggia 614 в подсоленной кипящей воде. Через 1–2 минуты аккуратно разъедини гнёзда щипцами. Вари до al dente по упаковке. Перед сливом сохрани минимум 100 мл воды от пасты. Пасту не промывай."},
+          {group:"Креветки",icon:"🔥",title:"Быстро обжарь креветки с чесноком",time:"2–3 мин",desc:"На большой сковородке разогрей 5 г масла на средне-сильном огне. Выложи креветки одним слоем. Жарь первую сторону 60–75 секунд, переверни, добавь 1 мелко нарезанный зубчик чеснока и жарь ещё 45–60 секунд, перемешивая чеснок в масле. Как только креветки стали розовыми и непрозрачными — сразу сними на тарелку."},
+          {group:"Грибы",icon:"🍄",title:"Подрумянь шампиньоны",time:"5–7 мин",desc:"В ту же сковородку добавь оставшиеся 5 г масла и 200 г шампиньонов. Жарь на средне-сильном огне, пока грибы выпустят влагу, она почти полностью испарится, а края начнут румяниться. Только в самом конце слегка посоли и поперчи."},
+          {group:"Соус",icon:"🍅",title:"Добавь черри и второй зубчик чеснока",time:"2–3 мин",desc:"К грибам добавь 220–250 г черри и жарь 2–3 минуты, чтобы они размягчились и часть начала лопаться. Добавь второй зубчик чеснока и прогрей ещё 20–30 секунд. Не давай чесноку темнеть."},
+          {group:"Соус",icon:"🌶️",title:"Прогрей Aroy-D Tom Yum Paste",time:"30 сек",desc:"Добавь ровно 12 г пасты том-ям Aroy-D и тщательно размешай с грибами и томатами. Прогрей около 30 секунд. Мы специально не увеличиваем количество: эта паста довольно острая, а сливочный профиль здесь важнее максимальной остроты."},
+          {group:"Соус",icon:"🥛",title:"Сделай насыщенный соус на сливках 33%",time:"3–4 мин",desc:"Убавь огонь примерно до 4/10. Влей 150 мл сливок 33% и сначала 40 мл воды от пасты. Перемешай и готовь при очень мягком кипении 2–3 минуты. Соус должен стать однородным, насыщенным и слегка загустеть. Не разбавляй сразу большим количеством воды."},
+          {group:"Сборка",icon:"🍝",title:"Доведи фетучини прямо в соусе",time:"1–2 мин",desc:"Добавь фетучини в сковородку и энергично, но аккуратно перемешивай 1–2 минуты. Если соус слишком густой, добавляй воду от пасты по 10–15 мл. Обычно всего требуется 40–70 мл."},
+          {group:"Финиш",icon:"🧀",title:"Вмешай Džiugas на выключенном огне",time:"30–60 сек",desc:"Полностью выключи нагрев. Добавь 15–20 г очень мелко натёртого Džiugas и хорошо перемешай. Для максимально café-версии на этом же этапе можно вмешать 5 г холодного сливочного масла."},
+          {group:"Финиш",icon:"🦐",title:"Верни креветки и добавь петрушку",time:"30–45 сек",desc:"Верни креветки в горячую пасту и аккуратно перемешай 30–45 секунд — только чтобы они прогрелись. Добавь петрушку. Попробуй соус и только теперь решай, нужна ли дополнительная соль."},
+          {group:"Подача",icon:"✨",title:"Подавай сразу",time:"сразу",desc:"Разложи пасту по двум тарелкам. Соус должен быть заметно сливочным и блестящим, а не сухим. Если постоял и загустел, вмешай буквально 1 ст. л. горячей воды от пасты перед подачей."},
+        ],
+        tips:[
+          ["🦐 Креветки","Короткая обжарка, чеснок добавляем после переворота, затем только финальный прогрев."],
+          ["🍄 Шампиньоны","Не добавляй сливки, пока вода из грибов почти полностью не выпарилась."],
+          ["🥛 Сливочность","150 мл сливок 33%. Воду добавляй постепенно: 40 мл сначала, затем по 10–15 мл."],
+        ]
+      },
+      enoki: {
+        label:"🍄 Только эноки",
+        short:"Когда нет шампиньонов",
+        ingredients:[
+          ["🍝 Fettuccine Reggia 614", "140 г сухой"],
+          ["🦐 Креветки Vici в панцире", "700–800 г замороженных"],
+          ["🦐 Очищенное мясо креветок", "цель: 300 г"],
+          ["🍄 Эноки", "180 г"],
+          ["🍅 Томаты черри", "220–250 г"],
+          ["🧄 Чеснок", "2 зубчика · ~10 г"],
+          ["🌿 Петрушка", "10–15 г"],
+          ["🧀 Džiugas Delicate 24 мес.", "15–20 г"],
+        ],
+        note:"Эноки готовятся намного быстрее шампиньонов. Их не жарим 5–7 минут: добавляем уже в почти готовый сливочный соус, чтобы они сохранили приятную текстуру.",
+        kcal:"735–790",
+        protein:"45–50 г",
+        totalKcal:"1470–1580",
+        totalProtein:"90–100 г",
+        steps:[
+          {group:"Подготовка",icon:"🦐",title:"Разморозь и очисти креветки",time:"15–25 мин",desc:"Возьми 700–800 г замороженных креветок Vici в панцире. Разморозь, очисти и взвесь мясо: для рецепта нужно около 300 г очищенных креветок. Очень хорошо обсуши бумажными полотенцами."},
+          {group:"Подготовка",icon:"🍄",title:"Подготовь эноки, черри, чеснок и сыр",time:"5 мин",desc:"У 180 г эноки срежь примерно 1,5–2 см плотного основания и аккуратно разбери пучок на небольшие группы. Если промываешь — быстро ополосни и хорошо обсуши. Черри 220–250 г разрежь пополам. Чеснок раздели: 1 зубчик для креветок, 1 — для соуса. Džiugas 15–20 г мелко натри, петрушку поруби."},
+          {group:"Паста",icon:"🍝",title:"Отвари Fettuccine Reggia до al dente",time:"9–11 мин",desc:"Отвари 140 г сухих Fettuccine Reggia 614 в подсоленной кипящей воде. Через 1–2 минуты аккуратно разъедини гнёзда щипцами. Перед сливом сохрани минимум 100 мл воды от пасты. Пасту не промывай."},
+          {group:"Креветки",icon:"🔥",title:"Быстро обжарь креветки с чесноком",time:"2–3 мин",desc:"На большой сковородке разогрей 5 г масла на средне-сильном огне. Выложи креветки одним слоем. Жарь первую сторону 60–75 секунд, переверни, добавь 1 мелко нарезанный зубчик чеснока и жарь ещё 45–60 секунд. Сразу сними креветки на тарелку вместе с ароматным чесночным маслом."},
+          {group:"Соус",icon:"🍅",title:"Подрумянь черри",time:"2–3 мин",desc:"В ту же сковородку добавь оставшиеся 5 г масла и 220–250 г черри. Жарь 2–3 минуты на среднем/выше среднего огне, чтобы томаты размягчились, слегка подрумянились и часть начала лопаться."},
+          {group:"Соус",icon:"🧄",title:"Добавь второй зубчик чеснока и Tom Yum Paste",time:"45–60 сек",desc:"Добавь второй мелко нарезанный зубчик чеснока и прогрей 20–30 секунд. Затем добавь 12 г Aroy-D Tom Yum Paste, хорошо размешай и прогрей ещё около 30 секунд."},
+          {group:"Соус",icon:"🥛",title:"Сделай сливочный том-ям соус",time:"3 мин",desc:"Убавь огонь примерно до 4/10. Влей 150 мл сливок 33% и сначала 40 мл воды от пасты. Перемешай и дай очень мягко покипеть около 2 минут, чтобы соус стал гладким и слегка загустел."},
+          {group:"Эноки",icon:"🍄",title:"Добавь эноки только сейчас",time:"60–90 сек",desc:"В почти готовый сливочный соус добавь 180 г подготовленных эноки. Аккуратно разрыхли их щипцами и готовь всего 60–90 секунд. Они должны стать мягче, но сохранить лёгкую упругость. Долго не туши — иначе эноки станут слишком мягкими и нитевидными."},
+          {group:"Сборка",icon:"🍝",title:"Доведи фетучини в соусе",time:"1 мин",desc:"Добавь фетучини и аккуратно перемешивай около 1 минуты, распределяя эноки между лентами пасты. Если соус слишком густой, добавляй воду от пасты по 10–15 мл. Старайся не превышать примерно 70 мл в сумме."},
+          {group:"Финиш",icon:"🧀",title:"Вмешай Džiugas на выключенном огне",time:"30–60 сек",desc:"Выключи нагрев. Добавь 15–20 г очень мелко натёртого Džiugas и аккуратно перемешай. Для максимально сливочного café-финиша можно вмешать 5 г холодного сливочного масла."},
+          {group:"Финиш",icon:"🦐",title:"Верни креветки и добавь петрушку",time:"30–45 сек",desc:"Верни креветки в горячую пасту, аккуратно перемешай 30–45 секунд и добавь петрушку. Попробуй соус и только после этого корректируй соль."},
+          {group:"Подача",icon:"✨",title:"Подавай сразу",time:"сразу",desc:"Разложи по двум тарелкам, стараясь равномерно распределить эноки и креветки. Если соус успел сильно загустеть, вмешай 1 ст. л. горячей воды от пасты непосредственно перед подачей."},
+        ],
+        tips:[
+          ["🍄 Эноки","Не жарь их как шампиньоны. 60–90 секунд в почти готовом соусе + около минуты с пастой — достаточно."],
+          ["🦐 Креветки","Чеснок добавляем после переворота креветок, чтобы он ароматизировал масло, но не сгорел."],
+          ["🥛 Соус","Эноки дадут немного влаги, поэтому начинай только с 40 мл воды от пасты и добавляй ещё лишь при необходимости."],
+        ]
+      }
+    };
+
+    function App(){
+      const [variant,setVariant] = useState("enoki");
+      const [doneByVariant,setDoneByVariant] = useState(() => {
+        try{return JSON.parse(localStorage.getItem("tomYumPastaVariantsDone") || "{}");}
+        catch{return {};}
+      });
+      const [tab,setTab] = useState("Все");
+
+      const recipe = recipes[variant];
+      const done = doneByVariant[variant] || {};
+      const steps = recipe.steps;
+
+      useEffect(() => {
+        try{localStorage.setItem("tomYumPastaVariantsDone", JSON.stringify(doneByVariant));}catch{}
+      }, [doneByVariant]);
+
+      useEffect(() => setTab("Все"), [variant]);
+
+      const groups = ["Все", ...Array.from(new Set(steps.map(s => s.group)))];
+      const filtered = tab === "Все" ? steps : steps.filter(s => s.group === tab);
+      const completed = steps.filter((_,i) => done[i]).length;
+      const percent = Math.round((completed / steps.length) * 100);
+      const toggle = (idx) => setDoneByVariant(prev => ({
+        ...prev,
+        [variant]: {...(prev[variant] || {}), [idx]: !(prev[variant] || {})[idx]}
+      }));
+      const reset = () => setDoneByVariant(prev => ({...prev, [variant]:{}}));
+      const markAll = () => {
+        const all = {}; steps.forEach((_,i) => all[i] = true);
+        setDoneByVariant(prev => ({...prev,[variant]:all}));
+      };
+
+      return h("div", {className:"app"},
+        h("section", {className:"hero"},
+          h("div", {className:"card hero-main"},
+            h("div", {className:"badge"}, "🌶️ Recipe Todo · 2 порции"),
+            h("h1", null, "Паста «Том-ям» с креветками"),
+            h("p", {className:"subtitle"}, variant === "enoki"
+              ? "Fettuccine Reggia в насыщенном сливочном том-ям соусе на сливках 33% с креветками, эноки, черри и Džiugas. Специальная версия без шампиньонов: эноки добавляются в самом конце, чтобы сохранить текстуру."
+              : "Fettuccine Reggia в насыщенном сливочном том-ям соусе на сливках 33% с креветками, шампиньонами, черри и Džiugas. Более кремовая café-версия: меньше воды, больше сливочности, мягче острота Aroy-D."),
+            h("div", {className:"meta-grid"},
+              h("div", {className:"meta"}, h("b", null, "2"), h("span", null, "большие порции")),
+              h("div", {className:"meta"}, h("b", null, "30–40"), h("span", null, "минут")),
+              h("div", {className:"meta"}, h("b", null, recipe.kcal), h("span", null, "ккал / порция")),
+              h("div", {className:"meta"}, h("b", null, recipe.protein), h("span", null, "белка / порция"))
+            )
+          ),
+          h("aside", {className:"card hero-side"},
+            h("div", {className:"plate"},
+              h("span", {className:"float f1"}, "🦐"),
+              h("span", {className:"float f2"}, "🍝"),
+              h("span", {className:"float f3"}, "🍄"),
+              h("span", {className:"float f4"}, "🌶️"),
+              h("span", {className:"float f5"}, "🍅"),
+              h("span", {className:"big"}, "🍜")
+            ),
+            h("div", {className:"progress-wrap"},
+              h("div", {className:"progress-top"},
+                h("span", null, "Прогресс готовки"),
+                h("b", null, completed + "/" + steps.length + " · " + percent + "%")
+              ),
+              h("div", {className:"bar"}, h("div", {className:"fill", style:{width:percent + "%"}}))
+            ),
+            h("div", {className:"actions"},
+              h("button", {className:"btn primary", onClick:markAll}, "Готово всё"),
+              h("button", {className:"btn", onClick:reset}, "Сбросить")
+            )
+          )
+        ),
+
+        h("section", {className:"card recipe-switch"},
+          h("div", {className:"recipe-switch-copy"},
+            h("b", null, "🍄 Выбери грибы"),
+            h("span", null, "Ингредиенты и шаги автоматически переключатся под выбранную версию.")
+          ),
+          h("div", {className:"recipe-tabs"},
+            Object.entries(recipes).map(([key,r]) =>
+              h("button", {key, className:"recipe-tab " + (variant === key ? "active" : ""), onClick:()=>setVariant(key)}, r.label)
+            )
+          )
+        ),
+
+        h("main", {className:"layout"},
+          h("aside", {className:"card section"},
+            h("h2", null, "Ингредиенты"),
+            h("p", {className:"alt-note"}, h("b", null, recipe.short + ": "), recipe.note),
+            h("h3", null, "Основное"),
+            h("div", {className:"ingredients"},
+              recipe.ingredients.map((item,i) =>
+                h("div", {className:"ing", key:"ing"+i},
+                  h("span", {className:"name"}, item[0]),
+                  h("span", {className:"amount"}, item[1])
+                )
+              )
+            ),
+            h("h3", null, "Соус и специи"),
+            h("div", {className:"ingredients"},
+              commonSauce.map((item,i) =>
+                h("div", {className:"ing", key:"sauce"+i},
+                  h("span", {className:"name"}, item[0]),
+                  h("span", {className:"amount"}, item[1])
+                )
+              )
+            ),
+            h("p", {className:"note"}, variant === "enoki"
+              ? "Для эноки особенно важно не перелить воду: 150 мл сливок 33% + сначала только 40 мл воды от пасты. Эноки сами добавят немного влаги. Aroy-D оставляем 12 г."
+              : "Главная настройка этой версии: 150 мл сливок 33% + всего 40–70 мл воды от пасты. Aroy-D оставляем 12 г, чтобы соус был именно сливочно-том-ямным, а не просто очень острым."),
+            h("h3", null, "КБЖУ примерно"),
+            h("div", {className:"macro-grid"},
+              h("div", {className:"macro"}, h("b", null, recipe.totalKcal), h("span", null, "ккал на всю сковороду")),
+              h("div", {className:"macro"}, h("b", null, recipe.totalProtein), h("span", null, "белка на всю сковороду")),
+              h("div", {className:"macro"}, h("b", null, recipe.kcal), h("span", null, "ккал на 1 порцию")),
+              h("div", {className:"macro"}, h("b", null, recipe.protein), h("span", null, "белка на 1 порцию"))
+            ),
+            h("div", {className:"variant"},
+              h("b", null, "Café-финиш: "),
+              "если калории сегодня не приоритет — на выключенном огне вмешай 5 г холодного сливочного масла. Соус станет ещё более гладким и ресторанным."
+            )
+          ),
+          h("section", {className:"card section"},
+            h("h2", null, "Пошаговый todo"),
+            h("div", {className:"tabs"},
+              groups.map(g =>
+                h("button", {key:g, className:"tab " + (tab === g ? "active" : ""), onClick:() => setTab(g)}, g)
+              )
+            ),
+            h("div", {className:"todo-list"},
+              filtered.map((step) => {
+                const originalIdx = steps.indexOf(step);
+                return h("label", {className:"todo " + (done[originalIdx] ? "done" : ""), key:step.title},
+                  h("input", {className:"check", type:"checkbox", checked:!!done[originalIdx], onChange:() => toggle(originalIdx)}),
+                  h("div", null,
+                    h("p", {className:"todo-title"}, step.icon + " " + step.title),
+                    h("p", {className:"todo-desc"}, step.desc)
+                  ),
+                  h("span", {className:"time"}, step.time)
+                );
+              })
+            ),
+            h("div", {className:"tips"},
+              recipe.tips.map((tip,i) =>
+                h("div", {className:"tip",key:"tip"+i}, h("b", null, tip[0]), h("span", null, tip[1]))
+              )
+            )
+          )
+        ),
+        h("footer", null, variant === "enoki"
+          ? "Creamy Tom Yum fettuccine · enoki edition · прогресс сохраняется отдельно для каждого варианта"
+          : "Creamy Tom Yum fettuccine · champignon edition · прогресс сохраняется отдельно для каждого варианта")
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+  </script>
+</body>
+</html>
