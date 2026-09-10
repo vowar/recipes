@@ -16,7 +16,7 @@ export default [
     slug: "steak",
     emoji: "🥩",
     title: "Стейк с butter basting + два steakhouse-соуса",
-    description: "Рибай ~3 см на нержавейке с butter basting до уверенной medium и два соуса на том же fond: Red Wine или Peppercorn Cream.",
+    description: "Рибай ~3 см или обычный стейк 2–2.5 см на нержавейке с butter basting до medium и два соуса на том же fond: Red Wine или Peppercorn Cream.",
     theme: themes.wine,
     load: () => import("./steak.js")
   },
