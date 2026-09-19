@@ -35,5 +35,13 @@ export default [
     description: "Fettuccine в сливочном том-ям соусе с креветками, черри и Džiugas. Версия с шампиньонами или только с эноки.",
     theme: themes.chili,
     load: () => import("./tom-yum-pasta.js")
+  },
+  {
+    slug: "texas-chili",
+    emoji: "🌶️",
+    title: "Texas-Style Chili",
+    description: "Густой мясной chili на 700 г говяжьего фарша: обжарка партиями, Chili Powder + Ancho, кумин, копчёная паприка и 1½–2 часа томления. 4 средние порции, умеренная острота.",
+    theme: themes.ember,
+    load: () => import("./texas-chili.js")
   }
 ];

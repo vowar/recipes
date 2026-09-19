@@ -36,4 +36,19 @@ const chili = {
   "on-accent": "#281112"
 };
 
-export default { gold, wine, chili };
+// Texas chili: brick red with smoky ember glows.
+const ember = {
+  "accent": "#d04a33",
+  "accent-3": "#ffc39b",
+  "accent-dark": "#7c2517",
+  "tint-a": "#b8471f",
+  "tint-b": "#70402b",
+  "bg": "#120e0c",
+  "bg-deep": "#0c0908",
+  "panel": "#1e1714",
+  "text": "#fff3ea",
+  "muted": "#cdb8aa",
+  "on-accent": "#2b0e08"
+};
+
+export default { gold, wine, chili, ember };

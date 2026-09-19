@@ -10,7 +10,7 @@ Live: https://vowar.github.io/recipes/
 |---|---|
 | `index.html` | The single page. `#/` lists the recipes, `#/<slug>` opens one. |
 | `assets/site.css` | Shared styles. Colors come from CSS custom properties (the theme). |
-| `assets/themes.js` | Color presets: `gold`, `wine`, `chili`. |
+| `assets/themes.js` | Color presets: `gold`, `wine`, `chili`, `ember`. |
 | `assets/app.js` | Hash router, theme switching, home page, loading and error screens. |
 | `assets/recipe-app.js` | Renders a recipe page: pickers, ingredients, checklist, progress. |
 | `recipes/index.js` | The recipe manifest, one entry per recipe. |
